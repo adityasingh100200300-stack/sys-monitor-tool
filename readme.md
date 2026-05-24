@@ -11,8 +11,8 @@ A modern, lightweight desktop GUI dashboard built with Python that monitors low-
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git)
-   cd YOUR_REPO_NAME
+   git clone [https://github.com/adityasingh100200300-stack/sys-monitor-tool.git]
+   cd sys-monitor-tool.git
 
 Create and activate a virtual environment:
 
