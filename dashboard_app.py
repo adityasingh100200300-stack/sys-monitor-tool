@@ -43,6 +43,15 @@ class MonitorDashboard(ctk.CTk):
         self.pb_cpu.set(0)
         self.label_cpu_stats = ctk.CTkLabel(self.frame_cpu, text="0.0% | Cycles: 0", font=("Arial", 12))
         self.label_cpu_stats.pack(pady=5)
+        
+        # --- The Boost Mode Switch ---
+        self.switch_boost = ctk.CTkSwitch(
+            self.frame_cpu, 
+            text="Boost Mode (Balanced)", 
+            command=self.toggle_boost,
+            progress_color="#e74c3c" # Turns crimson red when active
+        )
+        self.switch_boost.pack(pady=(10, 5))
 
         self.frame_ram = ctk.CTkFrame(self)
         self.frame_ram.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
@@ -89,6 +98,21 @@ class MonitorDashboard(ctk.CTk):
 
         self.start_backend_thread()
         self.update_gui_loop() 
+
+    def toggle_boost(self):
+        """Triggers immediately when the user clicks the Boost toggle switch."""
+        if self.switch_boost.get() == 1:
+            # Switch turned ON -> Force Performance
+            success, msg = self.monitor.set_power_mode("high")
+            if success:
+                self.switch_boost.configure(text="Boost Mode (ACTIVE)", text_color="#e74c3c")
+                self.textbox_alerts.insert("0.0", "🚀 SYSTEM TWEAK: CPU set to High Performance Plan.\n")
+        else:
+            # Switch turned OFF -> Return to normal
+            success, msg = self.monitor.set_power_mode("balanced")
+            if success:
+                self.switch_boost.configure(text="Boost Mode (Balanced)", text_color="white")
+                self.textbox_alerts.insert("0.0", "♻️ SYSTEM TWEAK: CPU returned to Balanced power profile.\n")
 
     def backend_data_collector(self):
         self.monitor.get_cpu_metrics()

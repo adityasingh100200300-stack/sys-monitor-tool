@@ -2,6 +2,8 @@ import os
 import time
 import psutil
 import json
+import subprocess
+import platform
 
 class SystemMonitor:
     def __init__(self):
@@ -11,6 +13,24 @@ class SystemMonitor:
         #track metric
         self.cpu_breach_count=0
         self.mem_breach_count=0
+
+    def set_power_mode(self, mode="high"):
+        """Directly modifies the Windows Power Plan using command line."""
+        if platform.system() != "Windows":
+            return False, "This tweak requires a Windows environment."
+        
+        try:
+            # Official Windows OS Power Plan GUIDs
+            if mode == "high":
+                guid = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"  # High Performance
+            else:
+                guid = "381b4222-f694-41f0-9685-ff5bb260df2e"  # Balanced
+                
+            # Issue the hidden command directly to the Windows power engine
+            subprocess.run(["powercfg", "/setactive", guid], check=True, capture_output=True)
+            return True, f"Power plan set to {mode.upper()}"
+        except Exception as e:
+            return False, str(e)
 
     def load_config(self):
         try:
